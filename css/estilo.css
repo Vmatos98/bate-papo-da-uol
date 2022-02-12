@@ -1,6 +1,7 @@
 
 body{
     background: #E5E5E5;
+    
 }
 header{
     position: fixed;
@@ -8,7 +9,7 @@ header{
     height: 80px;
     left: 0px;
     top: 0px;
-
+    z-index: 2;
     background: #FFFFFF;
 }
 header img{
@@ -24,33 +25,79 @@ header ion-icon{
     top: 15.62%;
     font-size: 53px;
 }     
-main{
-    margin-top: 106px;
-    
-    height: 100vh;
+.chat{
+    position: relative;
+    top: 0;
+    max-height: calc(100% - 160px);
+    padding: 86px 0 86px 0;
 }
 .message-open{
-    width: 100vw;
-    height: 40px;
+    max-width: 100vw;
+    min-height: 40px;
+    padding: 10px;
+    margin: 5px;
     background: #FFFFFF;
     border-radius: 2px;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    padding: 0 5px;
+    word-break: break-all;
+    
 }
 .message-close{
-    width: 100vw;
-    height: 40px;
+    max-width: 100vw;
+    min-height: 40px;
+    margin: 5px;
     background: #FFDEDE;
     border-radius: 2px;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    padding: 0 5px;
+    word-break: break-all;
+    
 }
 .time{
     color: #AAAAAA;
+}
+.font-bold{
+    font-style: bold;
+    font-weight: bold;
+}
+.chat-action{
+    background: #DCDCDC;
+    min-height: 40px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin: 5px;
+    
+}
+
+.sidebar{
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 70%;
+    background: #FFFFFF;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    
+}
+.sidebar p{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+}
+.side-title{
+    padding: 20px;
+    font-family: Roboto;
+    font-style: bold;
+    font-weight: bold;
+    font-size: 18px;
 }
 footer{
     position: fixed;
@@ -80,4 +127,7 @@ footer ion-icon{
     position: absolute;
     right: 0;
     padding: 27px;
+}
+.none{
+    display: none;
 }
