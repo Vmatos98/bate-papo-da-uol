@@ -5,13 +5,25 @@ const user = prompt("Qual seu nome?");
 let data= [];
 let to = "Todos";
 let type= "message";
+let lastMessage = [];
 setInterval(online, 5000);
-setInterval(getData, 2000);
+setInterval(getMessage, 400);
 
-function getData(){
+function getMessage(){
     
     const promise = axios.get(messageUrl);
-    promise.then(loadChat);
+    if(data.length === 0){
+         promise.then(loadChat); 
+     }else{
+        promise.then(newData);
+        let lastChild = data.length; 
+        if(data[lastChild-1].text === lastMessage.text && data[lastChild-1].from === lastMessage.from && data[lastChild-1].time === lastMessage.time){
+             return false;}
+        else{printChat(data[lastChild-1]);}
+        
+
+        }
+
     promise.catch(error);
 }
 
@@ -29,7 +41,7 @@ function sendText(){
 	object.type= type;    
     document.querySelector("#message").value = ""
     postData(messageUrl, object);
-    getData();
+    getMessage();
 }
 
 function loadChat(load){
@@ -37,23 +49,41 @@ function loadChat(load){
     
     data = load.data;
     let chat = document.querySelector(".chat");
-    
     chat.innerHTML= "";
     for(let i = 0; i<data.length; i++){
-        if(data[i].type === "status"){
-            chat.innerHTML += `<div class="chat-action"><p><span class="time">(${data[i].time})</span> <span class="font-bold">${data[i].from}</span>  ${data[i].text} </p></div>`
-        }else if(data[i].type === "private_message" && data[i].to === user){
-            chat.innerHTML += `<div class="message-close">
-                    <p><span class="time">(${data[i].time})</span> <span class="font-bold">${data[i].from}</span>  reservadamente para <span class="font-bold">${data[i].to}</span>: ${data[i].text}</p>
-            </div>`
-        }else if(data[i].type === "message"){
-                chat.innerHTML += `<div class=message-open><p><span class="time">(${data[i].time})</span> <span class="font-bold">${data[i].from}</span>  para <span class="font-bold">${data[i].to}</span>: ${data[i].text}</p></div>`;
-           }
+        printChat(data[i]);
+        
     }
     
     
     
 }
+function printChat(load){
+    
+    let chat = document.querySelector(".chat");
+    // var element = document.querySelector(".message");
+    // if(element!= null){element.classList.remove("last");}
+    if(load.type === "status"){
+        chat.innerHTML += `<div class="chat-action message last"><p><span class="time">(${load.time})</span> <span class="font-bold">${load.from}</span>  ${load.text} </p></div>`
+        
+    }else if(load.type === "private_message" && load.to === user){
+        chat.innerHTML += `<div class="message-close message last">
+                <p><span class="time">(${load.time})</span> <span class="font-bold">${load.from}</span>  reservadamente para <span class="font-bold">${load.to}</span>: ${load.text}</p>
+        </div>`
+        
+    }else if(load.type === "message"){
+            chat.innerHTML += `<div class="message-open message last"><p><span class="time">(${load.time})</span> <span class="font-bold">${load.from}</span>  para <span class="font-bold">${load.to}</span>: ${load.text}</p></div>`;
+            
+    }
+    lastMessage = load;   
+    document.querySelector(".last").scrollIntoView();
+    document.querySelector(".last").classList.remove("last");
+}  
+
+function newData(load){
+    data = load.data;
+}
+
 function error(load){
     alert(load.response.status);
    
@@ -70,7 +100,11 @@ function login(){
     };
     postData(userUrl, object);
     
-    getData();
+    getMessage();
+}
+
+function sideBar(){
+    document.querySelector(".sidebar").classList.toggle("none");
 }
 login();
-//getData();
+

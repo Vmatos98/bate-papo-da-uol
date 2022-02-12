@@ -1,11 +1,12 @@
 
 body{
     background: #E5E5E5;
-    
+    max-width: 500px;
 }
 header{
     position: fixed;
     width: 100vw;
+    max-width: 500px;
     height: 80px;
     left: 0px;
     top: 0px;
@@ -28,8 +29,10 @@ header ion-icon{
 .chat{
     position: relative;
     top: 0;
+    max-width: 500px;
     max-height: calc(100% - 160px);
     padding: 86px 0 86px 0;
+    word-break: break-all;
 }
 .message-open{
     max-width: 100vw;
@@ -74,13 +77,13 @@ header ion-icon{
 }
 
 .sidebar{
-    position: absolute;
-    right: 0;
+    position: fixed;
+    left: 30%;
     top: 0;
     height: 100%;
     width: 70%;
     background: #FFFFFF;
-    z-index: 2;
+    z-index: 3;
     display: flex;
     flex-wrap: wrap;
     text-align: center;
@@ -93,15 +96,34 @@ header ion-icon{
     font-size: 16px;
 }
 .side-title{
-    padding: 20px;
+    position: absolute;
+    top: 10px;
+    left: 5%;
     font-family: Roboto;
     font-style: bold;
     font-weight: bold;
     font-size: 18px;
 }
+.side-sub-title{
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    font-family: Roboto;
+    font-style: bold;
+    font-weight: bold;
+    font-size: 18px;
+    
+}
+.sidebar ion-icon{
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    font-size: 20px;
+}
 footer{
     position: fixed;
     width: 100vw;
+    max-width: 500px;
     height: 80px;
     left: 0px;
     bottom: 0px;
