@@ -6,33 +6,37 @@
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/estilo.css" />
     <title>Bate papo UOL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet"> 
   </head>
   <body>
-        <div class="sidebar none">
-            <ion-icon name="arrow-back-outline"></ion-icon>
-            <p class="side-title">Escolha um contato para enviar mensagem:</p>
-            <div class="contato"></div>
-            <div class="contato"></div>
-            <p class="side-sub-title">Escolha a visibilidade:</p>
-        </div>
+        <section class="sidebar none">
+            <ion-icon name="arrow-back-outline" onclick="sideBar()"></ion-icon>
+            <strong class="side-title">Escolha um contato para enviar mensagem:</strong>
+            <div class="contact all select" onclick="selectContact(this)"><ion-icon name="people-sharp"></ion-icon> <p>Todos</p> <ion-icon name="checkmark-sharp" class="icon"></ion-icon> </div>
+            <section class="list">
+               
+            </section>
+            <strong class="side-sub-title">Escolha a visibilidade:</strong>
+            <section class="type">
+                <div class="open select" onclick="setType(this)"><ion-icon name="lock-open" ></ion-icon><p>PUBLICO</p><ion-icon name="checkmark-sharp" class="icon"></ion-icon></div>
+                <div class="closed" onclick="setType(this)"><ion-icon name="lock-closed"></ion-icon><p>PRIVADO</p><ion-icon name="checkmark-sharp" class="icon"></ion-icon></div>
+            </section>
+        </section>
         <header>
             <img src="./content/logo 1.png" alt="logo do uol">
             <ion-icon name="people-sharp" onclick="sideBar()"></ion-icon>
+            <div class="users-online"><p>online: <span>0</span></p></div>
         </header>
         <main>
-            <div class="chat">
-                <div class="chat-action"><p><span class="time">(hh:mm:ss)</span> <span class="font-bold">nome</span>  entra na sala </p></div>
-                <div class="message-open">
-                    <p><span class="time">(hh:mm:ss)</span> <span class="font-bold">nome</span>  para <span class="font-bold">todos</span>: mensagem</p>
-                </div>
-                <div class="message-close">
-                    <p><span class="time">(hh:mm:ss)</span> <span class="font-bold">nome</span>  reservadamente para <span class="font-bold">você</span>: mensagem</p>
-                </div>
-            </div>    
+            <section class="chat">
+                
+            </section>    
         </main>
         <footer>
             <input type="text" id="message" placeholder="Escreva aqui..." />
-            <ion-icon name="paper-plane-outline" onclick="sendText()"></ion-icon>
+            <ion-icon name="paper-plane-outline" onclick="sendText()" data-identifier="send-message"></ion-icon>
         </footer>
         <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

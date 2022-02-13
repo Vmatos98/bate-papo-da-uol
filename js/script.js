@@ -5,8 +5,9 @@ const user = prompt("Qual seu nome?");
 let data= [];
 let to = "Todos";
 let type= "message";
+let erro;
 let lastMessage = [];
-setInterval(online, 5000);
+setInterval(online, 3000);
 setInterval(getMessage, 400);
 
 function getMessage(){
@@ -25,6 +26,7 @@ function getMessage(){
         }
 
     promise.catch(error);
+    getUsers();
 }
 
 function postData(url, object){
@@ -64,15 +66,15 @@ function printChat(load){
     // var element = document.querySelector(".message");
     // if(element!= null){element.classList.remove("last");}
     if(load.type === "status"){
-        chat.innerHTML += `<div class="chat-action message last"><p><span class="time">(${load.time})</span> <span class="font-bold">${load.from}</span>  ${load.text} </p></div>`
+        chat.innerHTML += `<div class="chat-action message last" data-identifier="message"><p><span class="time">(${load.time})</span> <span class="font-bold">${load.from}</span>  ${load.text} </p></div>`
         
-    }else if(load.type === "private_message" && load.to === user){
-        chat.innerHTML += `<div class="message-close message last">
+    }else if(load.type === "private_message" && (load.to === user || load.from === user)){
+        chat.innerHTML += `<div class="message-close message last" data-identifier="message">
                 <p><span class="time">(${load.time})</span> <span class="font-bold">${load.from}</span>  reservadamente para <span class="font-bold">${load.to}</span>: ${load.text}</p>
         </div>`
         
     }else if(load.type === "message"){
-            chat.innerHTML += `<div class="message-open message last"><p><span class="time">(${load.time})</span> <span class="font-bold">${load.from}</span>  para <span class="font-bold">${load.to}</span>: ${load.text}</p></div>`;
+            chat.innerHTML += `<div class="message-open message last" data-identifier="message"><p><span class="time">(${load.time})</span> <span class="font-bold">${load.from}</span>  para <span class="font-bold">${load.to}</span>: ${load.text}</p></div>`;
             
     }
     lastMessage = load;   
@@ -85,7 +87,9 @@ function newData(load){
 }
 
 function error(load){
+    erro = load;
     alert(load.response.status);
+    window.location.reload();
    
 }
 function online(){
@@ -105,6 +109,56 @@ function login(){
 
 function sideBar(){
     document.querySelector(".sidebar").classList.toggle("none");
+    getUsers();
+}
+
+function getUsers(){
+    const promise = axios.get(userUrl);
+    promise.then(printUser, usersOnline);
+    promise.catch(error);
+    
+}
+
+function printUser(load){
+    let users = document.querySelector(".list");
+    users.innerHTML="";
+    let data = load.data;
+    data.forEach(element => {
+        if(to ===element.name){
+            users.innerHTML+=` <div class="contact select" onclick="selectContact(this)"><ion-icon name="person-circle"></ion-icon><p>${element.name}</p><ion-icon name="checkmark-sharp" class="icon "></ion-icon> </div>`
+        }else{
+            users.innerHTML+=` <div class="contact" onclick="selectContact(this)"><ion-icon name="person-circle"></ion-icon><p>${element.name}</p><ion-icon name="checkmark-sharp" class="icon "></ion-icon> </div>`
+        }
+    });
+    document.querySelector(".users-online span").innerHTML=data.length;
+
+}
+
+function usersOnline(load){
+    let data = load.data;
+    document.querySelector(".users-online span").innerHTML=data.length;
+}
+
+function selectContact(element){
+    console.log(element);
+    document.querySelector(".select").classList.remove("select");
+   
+    element.classList.add("select");
+    console.log(element.innerText);
+    to = element.innerText;
+    
+}
+
+function setType(element){
+    
+    if(element.innerText === "PUBLICO"){
+        type= "message";
+    }else{
+        type= "private_message";
+    }
+    document.querySelector(".type .select").classList.remove("select");
+   
+    element.classList.add("select");
 }
 login();
 
