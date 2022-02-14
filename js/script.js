@@ -1,32 +1,43 @@
 const userUrl = "https://mock-api.driven.com.br/api/v4/uol/participants";
 const messageUrl = "https://mock-api.driven.com.br/api/v4/uol/messages";
 const statusUrl = "https://mock-api.driven.com.br/api/v4/uol/status";
-const user = prompt("Qual seu nome?");
+let user = "";//prompt("Qual seu nome?");
 let data= [];
 let to = "Todos";
 let type= "message";
 let erro;
 let lastMessage = [];
-setInterval(online, 3000);
+
+setInterval(() =>{
+    if(user!=""){
+        const object={
+            name: user
+        };
+        postData(statusUrl, object);
+    }
+}, 5000);
 setInterval(getMessage, 400);
 
 function getMessage(){
-    
-    const promise = axios.get(messageUrl);
-    if(data.length === 0){
-         promise.then(loadChat); 
-     }else{
-        promise.then(newData);
-        let lastChild = data.length; 
-        if(data[lastChild-1].text === lastMessage.text && data[lastChild-1].from === lastMessage.from && data[lastChild-1].time === lastMessage.time){
-             return false;}
-        else{printChat(data[lastChild-1]);}
-        
+    if(user!=""){ 
+        const promise = axios.get(messageUrl);
+       
+        if(data.length === 0){
+            promise.then(loadChat); 
+            
+        }else{
+            promise.then(newData);
+            let lastChild = data.length; 
+            if(data[lastChild-1].text === lastMessage.text && data[lastChild-1].from === lastMessage.from && data[lastChild-1].time === lastMessage.time){
+                return false;}
+            else{printChat(data[lastChild-1]);}
+            
 
-        }
+            }
 
-    promise.catch(error);
-    getUsers();
+        promise.catch(error);
+        getUsers();
+    }
 }
 
 function postData(url, object){
@@ -56,7 +67,7 @@ function loadChat(load){
         printChat(data[i]);
         
     }
-    
+    document.querySelector(".loading").classList.add("none");
     
     
 }
@@ -80,6 +91,7 @@ function printChat(load){
     lastMessage = load;   
     document.querySelector(".last").scrollIntoView();
     document.querySelector(".last").classList.remove("last");
+    
 }  
 
 function newData(load){
@@ -99,16 +111,25 @@ function online(){
     postData(statusUrl, object);
 }
 function login(){
+    user = document.querySelector("#user").value;
+    document.querySelector("#user").value="";
+    document.querySelector(".login").classList.add("none");
+    document.querySelector(".loading").classList.remove("none");
     const object={
         name: user
     };
     postData(userUrl, object);
-    
-    getMessage();
+    var i = setInterval(function () {
+        clearInterval(i);
+        document.querySelector(".loading").classList.add("none");
+        
+    getMessage();}, 3000);
 }
 
 function sideBar(){
     document.querySelector(".sidebar").classList.toggle("none");
+    document.querySelector(".transparent").classList.toggle("none");
+    
     getUsers();
 }
 
@@ -125,9 +146,9 @@ function printUser(load){
     let data = load.data;
     data.forEach(element => {
         if(to ===element.name){
-            users.innerHTML+=` <div class="contact select" onclick="selectContact(this)"><ion-icon name="person-circle"></ion-icon><p>${element.name}</p><ion-icon name="checkmark-sharp" class="icon "></ion-icon> </div>`
+            users.innerHTML+=` <div class="contact select" onclick="selectContact(this)" data-identifier="participant"><ion-icon name="person-circle"></ion-icon><p>${element.name}</p><ion-icon name="checkmark-sharp" class="icon "></ion-icon> </div>`
         }else{
-            users.innerHTML+=` <div class="contact" onclick="selectContact(this)"><ion-icon name="person-circle"></ion-icon><p>${element.name}</p><ion-icon name="checkmark-sharp" class="icon "></ion-icon> </div>`
+            users.innerHTML+=` <div class="contact" onclick="selectContact(this)" data-identifier="participant"><ion-icon name="person-circle"></ion-icon><p>${element.name}</p><ion-icon name="checkmark-sharp" class="icon "></ion-icon> </div>`
         }
     });
     document.querySelector(".users-online span").innerHTML=data.length;
@@ -146,6 +167,7 @@ function selectContact(element){
     element.classList.add("select");
     console.log(element.innerText);
     to = element.innerText;
+    document.querySelector(".to span").innerText = to;
     
 }
 
@@ -153,12 +175,13 @@ function setType(element){
     
     if(element.innerText === "PUBLICO"){
         type= "message";
-    }else{
+    }else if(to != "Todos"){
         type= "private_message";
+        document.querySelector(".to span").innerText = to +" (reservadamente)";
     }
     document.querySelector(".type .select").classList.remove("select");
-   
+    
     element.classList.add("select");
 }
-login();
+
 
